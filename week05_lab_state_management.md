@@ -822,6 +822,33 @@ class HomePage extends ConsumerWidget {
 
 > ✅ **Checkpoint 5.1** ถ่ายภาพหน้าจอฟีเจอร์ค้นหาที่กรองสินค้าได้ถูกต้อง และภาพ Dialog ยืนยันการล้างรายการโปรด เขียนอธิบายเหตุผลการเลือกชนิด State ของทั้งสองฟีเจอร์
 ```text
+โจทย์ที่ 1: ช่องค้นหาสินค้า
+- เลือกใช้ Ephemeral State (ผ่าน `setState`) เพราะ คำค้นหาเป็นข้อมูลที่ใช้กรองรายการสินค้าเฉพาะภายในหน้า `HomePage` ไม่มีหน้าจออื่นในแอปที่จำเป็นต้องรู้ข้อมูลนี้ 
 
+โจทย์ที่ 2: ปุ่มล้างรายการโปรดทั้งหมด
+- การแสดงปุ่ม: ใช้ `context.watch` เพราะให้ AppBar ตรวจสอบสถานะอยู่ตลอดเวลา และซ่อนปุ่มโดยอัตโนมัติเมื่อรายการโปรดว่างเปล่า
+- การกดปุ่มเพื่อลบ: ใช้ `context.read` ภายใน `onPressed` ของปุ่มยืนยันใน Dialog เพราะส่งคำสั่งลบข้อมูลเพียงครั้งเดียว (Event)
 
 ```
+
+
+<img width="1291" height="874" alt="image" src="https://github.com/user-attachments/assets/7935d105-9e9d-4317-a752-1203622d8db5" />
+
+
+
+<img width="1305" height="877" alt="image" src="https://github.com/user-attachments/assets/269a84cb-4564-48bd-93bc-6f0ad629f48d" />
+
+
+
+<img width="1296" height="879" alt="image" src="https://github.com/user-attachments/assets/12657f91-1d2b-47eb-bb32-042a0f70e8a1" />
+
+
+
+<img width="1298" height="873" alt="image" src="https://github.com/user-attachments/assets/80237716-4897-437b-ae5f-216d598a9549" />
+
+
+
+
+
+
+
