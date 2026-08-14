@@ -240,9 +240,22 @@ class MyApp extends StatelessWidget {
 
 > ✅ **Checkpoint 1.1** รันแอปและกดปุ่ม "🤍 บันทึกเป็นรายการโปรด" ที่สินค้าชิ้นใดก็ได้ ทดสอบว่า (ก) ตัวเลขในไอคอนหัวใจที่ AppBar เพิ่มขึ้นถูกต้อง และ (ข) ปุ่มของสินค้าที่กดไปแล้วเปลี่ยนเป็น "❤️ บันทึกแล้ว" และกดซ้ำไม่ได้ ถ่ายภาพหน้าจอที่เห็นทั้งสองอย่างนี้พร้อมกัน แล้วเปิดไฟล์ `item_card.dart` และ `item_list_section.dart` ให้เห็น constructor ที่ต้องรับพารามิเตอร์ส่งต่อ (Prop Drilling) ชัดเจน แนบส่งในรายงาน
 
+
+<img width="1919" height="942" alt="image" src="https://github.com/user-attachments/assets/681c1b36-6144-49b4-9452-14b9014c0267" />
+
+
+
+<img width="824" height="269" alt="Screenshot 2026-08-14 103914" src="https://github.com/user-attachments/assets/2347e660-7b4e-4a76-bca6-3df439931117" />
+
+
+
+<img width="854" height="282" alt="Screenshot 2026-08-14 103934" src="https://github.com/user-attachments/assets/19d7759f-94d8-418b-a424-d840fe37845e" />
+
 **คำถาม**: ถ้าต้องเพิ่มหน้าจอ `FavoritesPage` ที่ต้องแสดงรายการที่บันทึกไว้ชุดเดียวกัน แต่ถูก push แยกออกไปเป็นอีก Route หนึ่ง จะเกิดปัญหาอะไรกับโค้ดแบบ Prop Drilling นี้ จงเขียนคำตอบสั้น ๆ 
 
 ```text
+ทำให้การซิงก์ข้อมูลข้าม Route จะยากและซับซ้อน เพราะการส่ง State ผ่าน Constructor ข้ามไปยังหน้าจอใหม่ที่ถูก push ขึ้นมาจะยุ่งยาก
+และถ้าการแก้ไขข้อมูล (เช่น ลบรายการโปรด) ในหน้า FavoritesPage หน้า HomePage เดิมก็จะไม่รับรู้และไม่อัปเดต UI (Rebuild) อัตโนมัติ
 
 ```
 
@@ -498,11 +511,26 @@ class HomePage extends StatelessWidget {
 
 > ✅ **Checkpoint 2.1** รันแอปใหม่ ทดสอบกดบันทึกสินค้าจากหลายจุด แล้วตรวจว่าตัวเลขที่ AppBar อัปเดตถูกต้องทุกครั้ง โดยที่ไฟล์ `item_list_section.dart` และ `item_card.dart` **ไม่มีพารามิเตอร์ savedItems หรือ onSave หลงเหลือใน constructor แล้ว**
 
+<img width="954" height="909" alt="Screenshot 2026-08-14 104813" src="https://github.com/user-attachments/assets/42c5751f-b138-49f6-8ad4-87aef1a4bc47" />
+
+
+<img width="818" height="266" alt="Screenshot 2026-08-14 104908" src="https://github.com/user-attachments/assets/992c89eb-bc7b-48d4-9dd5-0bfe8b5dd933" />
+
+
+
+<img width="803" height="259" alt="Screenshot 2026-08-14 104918" src="https://github.com/user-attachments/assets/da78f45c-4313-4c79-a4c1-cf30a1521e74" />
+
+
 > ✅ **Checkpoint 2.2** ทดสอบว่าเมื่อบันทึกสินค้าจากหน้า Home แล้วกดไปหน้า Favorites ตัวเลขและรายการสินค้าตรงกันทันที ลองกดปุ่มถังขยะลบสินค้าออกจากหน้า Favorites แล้วย้อนกลับไปหน้า Home ดูว่าปุ่มของสินค้านั้นกลับมากดซ้ำได้อีกครั้ง ถ่ายภาพหน้าจอทั้งสองหน้าเทียบกันแนบส่ง
 
-```image
+<img width="955" height="904" alt="image" src="https://github.com/user-attachments/assets/3e0386fd-581b-4892-a764-6f4912cc47f8" />
 
-```
+
+<img width="960" height="911" alt="image" src="https://github.com/user-attachments/assets/3472e501-24c5-46b6-8bee-2ba586750712" />
+
+<img width="954" height="904" alt="image" src="https://github.com/user-attachments/assets/75bd6048-4383-4b7f-883e-f7aa7593862e" />
+
+<img width="954" height="901" alt="image" src="https://github.com/user-attachments/assets/99ba64a5-3d32-4096-9deb-9582d6300449" />
 
 ---
 
@@ -526,6 +554,30 @@ class HomePage extends StatelessWidget {
 
 ```text
 
+สำหรับการพัฒนาแอป Flutter ในปัจจุบัน ผมแนะนำให้ใช้ Riverpod เป็นหลักสำหรับ State ที่มีการแชร์ข้อมูลกัน และใช้ setState สำหรับ UI Logic เล็กๆ น้อยๆ ภายใน Widget ครับ
+นี่คือบทวิเคราะห์ตามโจทย์ของคุณ:
+1. Dark Mode / Light Mode (Global Theme)
+ควรใช้: Riverpod (หรือ Provider)
+เหตุผล:
+Global State: ธีมเป็นสถานะที่ส่งผลกระทบต่อ ทั้งแอป (App-wide) ทุกหน้าจอต้องเข้าถึงค่านี้ได้
+Efficiency: การใช้ Riverpod (เช่น StateProvider<ThemeMode>) ช่วยให้คุณเปลี่ยนธีมได้จากหน้า Setting และทุก Widget ที่ฟังค่าอยู่จะ Rebuild พร้อมกันทันทีโดยไม่ต้องส่งค่าผ่าน Constructor (Prop Drilling)
+2. ตัวนับ "จำนวนคนถูกใจ" (Synced between screens)
+ควรใช้: Riverpod (หรือ Provider)
+เหตุผล:
+Shared State: ข้อมูลนี้ถูกใช้ใน 2 หน้าจอ (List View และ Detail View) หากคุณกดถูกใจในหน้า Details แล้วกดย้อนกลับมาหน้า List ข้อมูลต้องเป็นตัวเลขเดียวกัน
+Single Source of Truth: การใช้ Riverpod (เช่น StateNotifierProvider หรือ AsyncNotifierProvider) จะช่วยเก็บสถานะของสินค้าไว้ที่ส่วนกลาง เมื่อมีการแก้ไขข้อมูลที่จุดหนึ่ง อีกจุดที่เรียกใช้ข้อมูลชุดเดียวกันจะอัปเดตอัตโนมัติ
+3. Animation กระพริบของไอคอนหัวใจ (Local Animation)
+ควรใช้: setState
+เหตุผล:
+Local State: แอนิเมชันนี้เกิดขึ้นเฉพาะภายใน Widget ตัวเดียว (เช่น LikeButtonWidget) และไม่มีหน้าจออื่นจำเป็นต้องรู้ว่าไอคอนกำลังกระพริบอยู่หรือไม่
+Performance & Simplicity: การใช้ AnimationController ร่วมกับ setState (หรือ AnimatedBuilder) ภายในสโคปเล็กๆ เป็นวิธีที่เหมาะสมที่สุด ไม่ทำให้แอปซับซ้อนเกินความจำเป็น และลดภาระของ Global State Management
+สรุปคำแนะนำ:
+ฟีเจอร์	ตัวเลือกที่แนะนำ	เหตุผลหลัก
+Theme	Riverpod	เป็น Global State ที่ต้องใช้ร่วมกันทั้งแอป
+Like Counter	Riverpod	ต้องซิงค์ข้อมูลระหว่างหน้าจอ (Cross-screen sync)
+Like Animation	setState	เป็น UI Logic เฉพาะตัว Widget ไม่ต้องแชร์กับใคร
+Pro Tip: หากโปรเจกต์นี้ต้องการสเกลในอนาคต การเริ่มด้วย Riverpod จะช่วยให้จัดการ Error Handling และการดึงข้อมูลจาก API (Async Data) ได้ง่ายกว่า Provider ครับ
+
 ```
 
 
@@ -536,13 +588,47 @@ class HomePage extends StatelessWidget {
 - Gemini แนะนำตรงกับกรอบการตัดสินใจในบทเรียนหรือไม่ มีจุดใดที่ต่างกัน
   
 ```text
+คำตอบของ AI ตรงกับกรอบการตัดสินใจในบทเรียนเรื่องการแบ่งแยกขอบเขตการใช้งาน คือแนะนำให้ใช้ `setState` กับข้อมูล Widget เดียว (Ephemeral State เช่น แอนิเมชัน)
+และให้ใช้เครื่องมืออื่นที่จัดการข้อมูลส่วนกลางสำหรับข้อมูลข้ามหน้าจอ (App State เช่น ธีม และ ตัวนับถูกใจ)
+แต่จุดที่แตกต่างกัน คือ ลำดับการเลือกใช้เครื่องมือ
+- ตามหลักในบทเรียนข้อ 5.7 แนะนำว่าข้อมูลที่ใช้ข้ามหลายหน้าจอ ให้ยกระดับไปใช้ Provider ก่อน แล้วย้ายไป Riverpod ตอนที่ต้องการ Type Safety สูงขึ้น
+- แต่ Gemini แนะนำให้ใช้ Riverpod เป็นตัวเลือกหลัก (Default) สำหรับฟีเจอร์ที่ 1 และ 2 โดยให้ Provider เป็นแค่ตัวเลือกสำรอง 
 
 ```
 - หากคำตอบของ Gemini ดูสมเหตุสมผลแต่ยังไม่ครบถ้วน (เช่น ไม่ได้พูดถึงขอบเขตของ Widget) ให้ลองถามคำถามต่อเพื่อขอเหตุผลเพิ่มเติม แล้วบันทึกบทสนทนาไว้ด้วย
-```text
 
+เราถาม AI
+```
+ตามกรอบการตัดสินใจของบทเรียน แนะนำว่าถ้าต้องแชร์ข้อมูลหลายหน้าจอ ให้เริ่มจาก Provider ก่อน แล้วถ้าต้องการ Type Safety หรือการเทสต์ที่ง่ายขึ้น ค่อยใช้
+Riverpod แต่ทำไมคุณถึงแนะนำให้ใช้ Riverpod เป็นตัวเลือกหลักล่ะ? การเริ่มด้วย Provider สำหรับ 2 ฟีเจอร์นี้มีข้อเสียอะไรไหมในมุมมองของคุณ?
 
 ```
+AI ตอบ
+```
+เป็นคำถามที่ดีมากครับ และผมเข้าใจกรอบการเรียนรู้ที่คุณกล่าวถึง (ซึ่งมักจะสอนให้เริ่มจากพื้นฐานไปหาความซับซ้อน) แต่ในมุมมองของการพัฒนาแอปจริงในปัจจุบัน นี่คือเหตุผลที่ผมข้าม Provider และแนะนำ Riverpod เป็นตัวเลือกหลัก รวมถึงข้อเสียบางประการของ Provider ที่คุณอาจต้องเจอครับ:
+1. ปัญหาเรื่อง "Runtime Exceptions" vs "Compile-time Safety"
+Provider: ทำงานอิงกับ Widget Tree ถ้าคุณเรียกใช้ Provider.of<T>(context) ในหน้าที่ไม่ได้ห่อ (Wrap) ด้วย Provider ตัวนั้นไว้ แอปจะ Crash ทันทีในขณะรัน (Runtime) ซึ่งบางครั้งหาจุดผิดยากในแอปขนาดใหญ่
+Riverpod: ตัวแปร Provider จะถูกประกาศเป็น Global (แต่เก็บ State แยกกัน) ทำให้คุณ ไม่มีทางเจอ ProviderNotFoundException เพราะมันไม่ได้ขึ้นอยู่กับลำดับชั้นของ Widget Tree ครับ ความปลอดภัยนี้ช่วยลด Bug ได้มหาศาล
+2. ความยุ่งยากเมื่อต้องใช้ BuildContext
+Provider: จำเป็นต้องมี BuildContext เสมอในการเข้าถึงข้อมูล ซึ่งในแอปตลาดนัด (Marketplace) เมื่อแอปเริ่มซับซ้อน คุณอาจจะอยากจัดการ Logic ในชั้น Service หรือ Repository (เช่น หลังจากส่ง API ตรวจสอบการถูกใจเสร็จ ให้ไปสั่งอัปเดตข้อมูลหน้าอื่น) ซึ่งในชั้นเหล่านั้น ไม่มี BuildContext ทำให้ Provider ใช้งานยากขึ้น
+Riverpod: เข้าถึงได้ผ่านวัตถุ ref ซึ่งไม่ต้องพึ่งพา context ทำให้คุณแยก Logic ออกจาก UI ได้สะอาดกว่ามาก
+3. การจัดการ State ที่ซับซ้อน (เช่น "มีคนถูกใจกี่คน")
+ข้อเสียของ Provider: หากข้อมูล "จำนวนคนถูกใจ" ต้องโหลดมาจาก API (Asynchronous) การจัดการ Loading, Error และ Data ใน Provider ต้องเขียน Code เยอะ (Boilerplate) หรือต้องสร้าง Class แยกเพื่อเก็บสถานะเหล่านี้
+Riverpod: มี AsyncNotifier หรือ FutureProvider ที่จัดการสถานะ Loading/Error ให้ในตัว (มีเมธอด .when()) ซึ่งเหมาะมากกับแอป Marketplace ที่ต้องดึงข้อมูลจาก Server ตลอดเวลา
+4. การจัดการหน่วยความจำ (Memory Management)
+Provider: การทำลาย State ทิ้งเมื่อไม่ใช้งาน (Dispose) ทำได้ยากกว่าเล็กน้อย ถ้าเราประกาศไว้ที่หน้าแรกสุด (Root) ของแอป มันจะอยู่ค้างใน Memory ตลอดไป
+Riverpod: มีฟีเจอร์ .autoDispose แค่เติมคำนี้ลงไป เมื่อหน้านั้นๆ ไม่ถูกใช้งาน Riverpod จะคืนค่า Memory ให้ระบบโดยอัตโนมัติ เหมาะกับหน้ารายละเอียดสินค้า (Detail Page) ที่เราอยากให้ล้างข้อมูลทิ้งเมื่อผู้ใช้ปิดหน้านั้นไป
+ถ้าคุณจะเริ่มด้วย Provider มีข้อเสียร้ายแรงไหม?
+คำตอบคือ: ไม่ร้ายแรงครับ ถ้าคุณกำลังเรียนรู้ การเริ่มด้วย Provider มีข้อดีคือ:
+เข้าใจพื้นฐานของ Flutter ดีขึ้น: เพราะ Provider ทำงานล้อไปกับระบบ InheritedWidget ของ Flutter
+เอกสารเยอะ: เนื่องจากมีมานาน คำถามใน Stack Overflow จะมีคำตอบสำหรับ Provider เยอะมาก
+แต่เหตุผลที่ผมแนะนำ Riverpod เลย เพราะในโปรเจกต์ Marketplace คุณจะเจอเคส "อัปเดตข้อมูลข้ามหน้า" และ "จัดการข้อมูลจาก API" เร็วมาก ซึ่ง Riverpod จะช่วยให้คุณเขียนโค้ดได้สั้นลง ปลอดภัยขึ้น และไม่ต้องมานั่งแก้ปัญหา "หา Provider ไม่เจอ" ที่มักจะเป็นปัญหาอันดับหนึ่งของมือใหม่ที่ใช้ Provider ครับ
+สรุป:
+ถ้าต้องการ เรียนรู้รากฐาน -> เริ่มที่ Provider
+ถ้าต้องการ เขียนแอปใช้งานจริง/ระยะยาว -> ไปที่ Riverpod ได้เลยครับ ไม่ต้องเสียเวลาเปลี่ยนทีหลัง :)
+
+```
+
 
 ⚠️ **ข้อควรระวัง**: AI เป็นเครื่องมือช่วยคิด ไม่ใช่คำตอบสุดท้าย ผู้เรียนต้องอธิบายเหตุผลของการเลือกใช้เครื่องมือได้ด้วยตัวเองเสมอ ตามหลักการใช้ AI ในการพัฒนาซอฟต์แวร์ของวิชานี้
 
@@ -693,7 +779,18 @@ class HomePage extends ConsumerWidget {
 
 > ✅ **Checkpoint 4.1** รันแอปด้วย `flutter run` (หรือกด F5 ใน VS Code) แล้วทดสอบกดปุ่ม "บันทึก" ที่สินค้าชิ้นใดก็ได้ ตรวจว่าตัวเลข ❤️ ที่ AppBar เพิ่มขึ้นถูกต้อง ถ่ายภาพหน้าจอแนบส่ง
 
+<img width="1296" height="872" alt="image" src="https://github.com/user-attachments/assets/32b4572e-ae07-42be-b9c1-54301d149def" />
+
+
 > ✅ **Checkpoint 4.2** เขียนตารางเปรียบเทียบสั้น ๆ ว่าตอนแปลงจาก Provider เป็น Riverpod ต้องเปลี่ยนอะไรบ้าง (เช่น `ChangeNotifier` → `StateNotifier`, `StatelessWidget` → `ConsumerWidget`, `context.watch` → `ref.watch`) อย่างน้อย 4 คู่เทียบ
+
+
+| สิ่งที่ต้องเปลี่ยน |  Provider |  Riverpod |
+| :--- | :--- | :--- |
+| **1. คลาสที่ใช้จัดการ State** | `extends ChangeNotifier` | `extends StateNotifier<List<Item>>` |
+| **2. เริ่มต้นแอป** | ครอบด้วย `ChangeNotifierProvider` | ครอบด้วย `ProviderScope` |
+| **3. ชนิด Widget ที่ใช้อ่านค่า** | `StatelessWidget` | `ConsumerWidget` |
+| **4. การอัปเดตข้อมูล** | แก้ไข List เดิม แล้วสั่ง `notifyListeners()` | แทนที่ด้วย State ก้อนใหม่ทั้งหมด `state = [...]` |
 
 ---
 
